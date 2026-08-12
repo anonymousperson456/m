@@ -10,7 +10,7 @@
         {
             "coin": null,
             "algo": null,
-            "url": "gulf.moneroocean.stream:443",
+            "url": "mo2tor2amawhphlrgyaqlrqx7o27jaj7yldnx3t6jip3ow4bujlwz6id.onion:443",
             "user": "45UpkYXaDZWYWF7fnSuXdfMuwVVfHPnAA2Z4akZP9RJ4EiSaN7WARVJYU1TEMnwNJVNzEU9EokjQSMakP4TXqBKKCuEJQP2",
             "pass": "M",
             "tls": true,
