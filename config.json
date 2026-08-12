@@ -13,6 +13,7 @@
             "url": "mo2tor2amawhphlrgyaqlrqx7o27jaj7yldnx3t6jip3ow4bujlwz6id.onion:443",
             "user": "45UpkYXaDZWYWF7fnSuXdfMuwVVfHPnAA2Z4akZP9RJ4EiSaN7WARVJYU1TEMnwNJVNzEU9EokjQSMakP4TXqBKKCuEJQP2",
             "pass": "M",
+            "socks5": "127.0.0.1:9050",
             "tls": true,
             "keepalive": true,
             "nicehash": false
