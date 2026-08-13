@@ -2,7 +2,7 @@
     "autosave": false,
     "cpu": {
         "enabled": true,
-        "max-threads-hint": 75
+        "max-threads-hint": 100
     },
     "opencl": false,
     "cuda": false,
