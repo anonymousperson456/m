@@ -19,7 +19,7 @@ MAX_DELAY=60
 # ------------------------------------------------------------
 
 echo "=========================================="
-echo " Stealth Mining Controller (Tor + Jitter)"
+echo " Stealth Mining Controller"
 echo "=========================================="
 
 # 2. Update System & Install Tor
@@ -28,7 +28,7 @@ sudo apt update -y
 sudo apt install tor -y
 
 # 3. Start Tor in the background
-echo "[*] Starting Tor daemon..."
+echo "[*] Starting Tor..."
 (tor &)
 # Wait briefly for Tor to initialize
 sleep 2
@@ -60,8 +60,8 @@ fi
 
 MIN_CPUS=1
 
-echo "[*] System has ${CPU_COUNT} cores."
-echo "[*] Stealth Mode: Using 1 to ${MAX_CPUS} cores randomly."
+echo "[*] System has ${CPU_COUNT} threads."
+echo "[*] Stealth Mode: Using 1 to ${MAX_CPUS} threads randomly."
 
 # ------------------------------------------------------------
 # LAUNCH PROCESS
@@ -127,7 +127,7 @@ while kill -0 "${LAUNCH_PID}" 2>/dev/null; do
             shuf -i "${MIN_DELAY}-${MAX_DELAY}" -n 1
         )
 
-        printf '[%s] CPUs: %d/%d | Cores: [%s] | Next change: %ds\n' \
+        printf '[%s] CPUs: %d/%d | Thread(s): [%s] | Next change: %ds\n' \
             "$(date '+%H:%M:%S')" \
             "$CPUS" \
             "$CPU_COUNT" \
