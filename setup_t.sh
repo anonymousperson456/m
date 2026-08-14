@@ -28,27 +28,14 @@ echo "=========================================="
 
 # 1. Update System & Install Tor
 echo "[*] Updating system and installing Tor..."
-if command -v apt &> /dev/null; then
-    sudo apt update -y
-    sudo apt install -y tor
-else
-    echo "[!] apt not found, assuming Tor is already installed or not needed."
-fi
+sudo apt update -y
+sudo apt install tor -y
 
 # 2. Start Tor in the background
 echo "[*] Starting Tor daemon..."
-if ! tor --version &> /dev/null; then
-    echo "[!] Tor binary not found. Skipping Tor start."
-else
-    # Check if Tor is already running
-    if ! pgrep -x tor &> /dev/null; then
-        tor &
-        # Wait for Tor to initialize (SOCKS port usually takes a few seconds)
-        sleep 3
-    else
-        echo "[*] Tor is already running."
-    fi
-fi
+(tor &)
+# Wait briefly for Tor to initialize
+sleep 2
 
 # 3. Make executable and verify
 if [ ! -x "${BINARY_PATH}" ]; then
