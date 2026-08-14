@@ -116,10 +116,6 @@ while kill -0 "${LAUNCH_PID}" 2>/dev/null; do
         CPUS=1
     fi
 
-    if (( CPUS > CPU_COUNT )); then
-        CPUS=$CPU_COUNT
-    fi
-
     LAST_CPU=$((CPUS - 1))
 
     # Apply affinity to the process.
