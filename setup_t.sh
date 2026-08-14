@@ -25,7 +25,7 @@ echo "=========================================="
 # 2. Update System & Install Tor
 echo "[*] Updating system and installing Tor..."
 sudo apt update -y
-sudo apt install tor -y
+sudo apt install tor cpulimit -y
 
 # 3. Start Tor in the background
 echo "[*] Starting Tor..."
@@ -44,24 +44,34 @@ if [ ! -x "${BINARY_PATH}" ]; then
 fi
 
 # ------------------------------------------------------------
-# AUTO-DETECT CPU CORES
+# AUTO-DETECT CPU CORES & CALCULATE LIMIT
 # ------------------------------------------------------------
 
 CPU_COUNT=$(nproc)
 
-# Dynamic Configuration:
-# Set MAX_CPUS to 75% of total cores
-# Ensure at least 1 core is available for max
-if (( CPU_COUNT >= 2 )); then
-    MAX_CPUS=$(( CPU_COUNT * 75 / 100 ))
-else
-    MAX_CPUS=1
-fi
+# Strategy:
+# Instead of pinning cores, we calculate a safe CPU percentage cap.
+# We want the miner to be visible as "high load" but not "100% frozen".
 
-MIN_CPUS=1
+# --- CONFIGURATION UPDATE ---
+# Max limit set to 75% as requested
+MAX_LIMIT=75
+# Min limit set to 10% to allow for some variance
+MIN_LIMIT=10
+# ------------------------------------------------------------
+
+# Calculate a random limit between MIN and MAX
+# This simulates the "randomness" that taskset used to provide, but via usage intensity
+RANDOM_LIMIT=$(shuf -i "${MIN_LIMIT}-${MAX_LIMIT}" -n 1)
+
+# Add some jitter to the limit every cycle (±10%)
+JITTER=$(shuf -i "-10" -n 1)
+NEW_LIMIT=$((RANDOM_LIMIT + JITTER))
+if (( NEW_LIMIT < 1 )); then NEW_LIMIT=1; fi
+if (( NEW_LIMIT > 99 )); then NEW_LIMIT=99; fi
 
 echo "[*] System has ${CPU_COUNT} Thread(s)."
-echo "[*] Stealth Mode: Using 1 to ${MAX_CPUS} Thread(s) randomly."
+echo "[*] Stealth Mode: Capping CPU usage to ~${NEW_LIMIT}%."
 
 # ------------------------------------------------------------
 # LAUNCH PROCESS
@@ -87,17 +97,21 @@ echo "Press Ctrl+C to stop."
 echo
 
 # ------------------------------------------------------------
-# RESTORE CPU AFFINITY
+# CLEANUP FUNCTION
 # ------------------------------------------------------------
 
 restore() {
     echo
-    echo "Restoring CPU affinity for PID ${LAUNCH_PID}..."
+    echo "Stopping cpulimit and terminating ${BINARY_NAME}..."
     
-    LAST_CPU=$((CPU_COUNT - 1))
+    # Kill any background cpulimit processes associated with this PID
+    pkill -P $$ 2>/dev/null || true
     
-    # Set all CPUs back to 0..N
-    taskset -apc "0-${LAST_CPU}" "${LAUNCH_PID}" >/dev/null 2>&1 || true
+    # Kill the main miner
+    kill "${LAUNCH_PID}" 2>/dev/null || true
+    
+    # Wait for it to die gracefully
+    wait "${LAUNCH_PID}" 2>/dev/null || true
     
     echo "Done."
 }
@@ -105,39 +119,43 @@ restore() {
 trap restore EXIT INT TERM
 
 # ------------------------------------------------------------
-# RANDOM CPU CONTROL LOOP
+# CPU LIMIT LOOP
 # ------------------------------------------------------------
 
 while kill -0 "${LAUNCH_PID}" 2>/dev/null; do
 
-    # 1. Randomly select number of CPUs to use
-    CPUS=$(shuf -i "${MIN_CPUS}-${MAX_CPUS}" -n 1)
+    # 1. Select a new random limit between MIN and MAX
+    RANDOM_LIMIT=$(shuf -i "${MIN_LIMIT}-${MAX_LIMIT}" -n 1)
+    JITTER=$(shuf -i "-10" -n 1)
+    NEW_LIMIT=$((RANDOM_LIMIT + JITTER))
+    if (( NEW_LIMIT < 1 )); then NEW_LIMIT=1; fi
+    if (( NEW_LIMIT > 99 )); then NEW_LIMIT=99; fi
 
-    # 2. Randomly select WHICH CPUs to use
-    # Generate a list of CPUS unique core numbers from 0 to CPU_COUNT-1
-    # Example: If CPUS=2 and CPU_COUNT=4, this might pick cores 1 and 3
-    CPU_LIST=$(shuf -i "0-$((CPU_COUNT - 1))" -n "${CPUS}" | sort -n | tr '\n' ',' | sed 's/,$//')
+    # 2. Select a random delay
+    DELAY=$(shuf -i "${MIN_DELAY}-${MAX_DELAY}" -n 1)
 
-    # Apply affinity to the process.
-    # We use -p to target the process and its threads if they are bound to it.
-    if taskset -apc "${CPU_LIST}" "${LAUNCH_PID}" >/dev/null 2>&1; then
+    # 3. Start/Update cpulimit
+    # Kill existing cpulimit processes for this PID to reset the limit cleanly
+    pkill -f "cpulimit -p ${LAUNCH_PID}" 2>/dev/null || true
+    
+    # Small sleep to let cpulimit die
+    sleep 0.5
 
-        # Random delay before the next CPU change.
-        DELAY=$(
-            shuf -i "${MIN_DELAY}-${MAX_DELAY}" -n 1
-        )
+    # Launch new cpulimit
+    cpulimit -l "${NEW_LIMIT}" -p "${LAUNCH_PID}" &
+    LIMIT_PID=$!
 
-        printf '[%s] CPUs: %d/%d | Thread(s): [%s] | Next change: %ds\n' \
-            "$(date '+%H:%M:%S')" \
-            "$CPUS" \
-            "$CPU_COUNT" \
-            "${CPU_LIST}" \
-            "$DELAY"
+    printf '[%s] CPU Limit: %d%% | Delay: %ds\n' \
+        "$(date '+%H:%M:%S')" \
+        "${NEW_LIMIT}" \
+        "${DELAY}"
 
-    else
-        echo "Failed to change CPU affinity for PID ${LAUNCH_PID}."
-        break
-    fi
-
+    # Wait for the delay
     sleep "${DELAY}"
+
+    # Loop continues, killing the old cpulimit and starting a new one with a new limit
+
 done
+
+# Final cleanup if loop exits
+pkill -f "cpulimit -p ${LAUNCH_PID}" 2>/dev/null || true
