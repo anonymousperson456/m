@@ -60,8 +60,8 @@ fi
 
 MIN_CPUS=1
 
-echo "[*] System has ${CPU_COUNT} threads."
-echo "[*] Stealth Mode: Using 1 to ${MAX_CPUS} threads randomly."
+echo "[*] System has ${CPU_COUNT} Thread(s)."
+echo "[*] Stealth Mode: Using 1 to ${MAX_CPUS} Thread(s) randomly."
 
 # ------------------------------------------------------------
 # LAUNCH PROCESS
