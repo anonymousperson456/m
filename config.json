@@ -1,9 +1,6 @@
 {
     "autosave": false,
-    "cpu": {
-        "enabled": true,
-        "max-threads-hint": 75
-    },
+    "cpu": true,
     "opencl": false,
     "cuda": false,
     "pools": [
