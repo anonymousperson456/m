@@ -36,7 +36,7 @@ rm -rf "${REPO_DIR}"
 # 2. Update System & Install Tor
 echo "[*] Updating system and installing Tor..."
 sudo apt update -y
-sudo apt install -y tor
+sudo apt install tor -y
 
 # 3. Start Tor in the background
 echo "[*] Starting Tor daemon..."
