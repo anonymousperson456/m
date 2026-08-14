@@ -12,7 +12,7 @@ BINARY_PATH="./m/${BINARY_NAME}"
 
 # Random CPU target:
 MIN_PERCENT=1
-MAX_PERCENT=100
+MAX_PERCENT=75
 
 # Random delay between changes (seconds):
 MIN_DELAY=1
