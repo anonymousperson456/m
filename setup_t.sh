@@ -46,7 +46,7 @@ sleep 2
 
 # 4. Clone the repository
 echo "[*] Cloning ${REPO_URL}..."
-git clone "${REPO_URL}" "${REPO_DIR}"
+git clone "${REPO_URL}"
 
 # 5. Make executable and verify
 if [ ! -x "${BINARY_PATH}" ]; then
