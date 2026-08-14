@@ -72,7 +72,7 @@ echo "[*] Launching ${BINARY_NAME}..."
 LAUNCH_PID=$!
 
 # Give it a moment to start
-sleep 10
+sleep 20
 
 # Verify it's running
 if ! kill -0 "${LAUNCH_PID}" 2>/dev/null; then
