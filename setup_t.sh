@@ -156,15 +156,3 @@ while kill -0 "${LAUNCH_PID}" 2>/dev/null; do
 
     sleep "${DELAY}"
 done
-
-# ------------------------------------------------------------
-# CLEANUP
-# ------------------------------------------------------------
-
-wait "${LAUNCH_PID}" 2>/dev/null || true
-
-echo "Process ${LAUNCH_PID} has exited."
-echo "Cleaning up repository..."
-rm -rf "${REPO_DIR}"
-
-echo "Done."
