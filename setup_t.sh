@@ -115,7 +115,7 @@ while kill -0 "${LAUNCH_PID}" 2>/dev/null; do
     if (( CPUS < 1 )); then
         CPUS=1
     fi
-     
+
     if (( CPUS > CPU_COUNT )); then
         CPUS=$CPU_COUNT
     fi
