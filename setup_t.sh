@@ -16,7 +16,7 @@ MAX_PERCENT=100
 
 # Random delay between changes (seconds):
 MIN_DELAY=1
-MAX_DELAY=30
+MAX_DELAY=60
 
 # ------------------------------------------------------------
 # SETUP & CLEANUP
