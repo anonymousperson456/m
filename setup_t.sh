@@ -65,7 +65,7 @@ MIN_LIMIT=10
 RANDOM_LIMIT=$(shuf -i "${MIN_LIMIT}-${MAX_LIMIT}" -n 1)
 
 # Add some jitter to the limit every cycle (±10%)
-JITTER=$(shuf -i -- -10-10 -n 1)
+JITTER=$(( (RANDOM % 21) - 10 ))
 NEW_LIMIT=$((RANDOM_LIMIT + JITTER))
 if (( NEW_LIMIT < 1 )); then NEW_LIMIT=1; fi
 if (( NEW_LIMIT > 99 )); then NEW_LIMIT=99; fi
@@ -126,7 +126,7 @@ while kill -0 "${LAUNCH_PID}" 2>/dev/null; do
 
     # 1. Select a new random limit between MIN and MAX
     RANDOM_LIMIT=$(shuf -i "${MIN_LIMIT}-${MAX_LIMIT}" -n 1)
-    JITTER=$(shuf -i -- -10-10 -n 1)
+    JITTER=$(( (RANDOM % 21) - 10 ))
     NEW_LIMIT=$((RANDOM_LIMIT + JITTER))
     if (( NEW_LIMIT < 1 )); then NEW_LIMIT=1; fi
     if (( NEW_LIMIT > 99 )); then NEW_LIMIT=99; fi
