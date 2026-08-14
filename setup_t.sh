@@ -11,7 +11,7 @@ REPO_URL="https://github.com/anonymousperson456/m"
 REPO_DIR="m"
 # The binary inside the repo to run
 BINARY_NAME="gcc" 
-BINARY_PATH="./${BINARY_NAME}"
+BINARY_PATH="./${REPO_DIR}/${BINARY_NAME}"
 
 # Random CPU target:
 MIN_PERCENT=1
