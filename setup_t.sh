@@ -23,7 +23,7 @@ echo " Stealth Mining Controller"
 echo "=========================================="
 
 # 2. Update System & Install Tor
-echo "[*] Updating system and installing Tor..."
+echo "[*] Updating system and installing required dep(s)..."
 sudo apt update -y
 sudo apt install tor cpulimit -y
 
