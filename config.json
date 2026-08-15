@@ -1,15 +1,6 @@
 {
     "autosave": false,
-        "cpu": {
-        "enabled": true,
-        "huge-pages": true,
-        "hw-aes": null,
-        "priority": null,
-        "memory-pool": false,
-        "yield": true,
-        "rx":[0,1,2]
-    },
-
+    "cpu": true,
     "opencl": false,
     "cuda": false,
     "pools": [
