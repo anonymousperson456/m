@@ -7,7 +7,7 @@
         "priority": null,
         "memory-pool": false,
         "yield": true,
-        "rx":
+        "rx":[0,1,2]
     },
 
     "opencl": false,
