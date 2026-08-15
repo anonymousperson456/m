@@ -1,9 +1,15 @@
 {
     "autosave": false,
-    "cpu": {
+        "cpu": {
         "enabled": true,
-        "max-threads-hint": 75
+        "huge-pages": true,
+        "hw-aes": null,
+        "priority": null,
+        "memory-pool": false,
+        "yield": true,
+        "rx":
     },
+
     "opencl": false,
     "cuda": false,
     "pools": [
